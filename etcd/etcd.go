@@ -34,5 +34,5 @@ func NewEtcdClient(opts ...Option) (easyKV.ReadWatcher, error) {
 		return etcdv2.NewEtcdClient(options.Nodes, options.TLS.ClientCert, options.TLS.ClientKey, options.TLS.ClientCaKeys, options.Auth.BasicAuth, options.Auth.Username, options.Auth.Password)
 	}
 
-	return nil, ErrUnknownApiLevel
+	return nil, ErrUnknownAPILevel
 }
