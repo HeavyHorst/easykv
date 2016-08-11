@@ -84,12 +84,13 @@ func (c *Client) connectedClient() (redis.Conn, error) {
 
 // NewRedisClient returns an *redis.Client with a connection to named machines.
 // It returns an error if a connection to the cluster cannot be made.
-func NewRedisClient(opts ...Option) (*Client, error) {
+func NewRedisClient(machines []string, opts ...Option) (*Client, error) {
 	var err error
 	var c Client
 	for _, o := range opts {
 		o(&c)
 	}
+	c.machines = machines
 
 	c.client, err = tryConnect(c.machines, c.password)
 	return &c, err
@@ -148,6 +149,6 @@ func (c *Client) GetValues(keys []string) (map[string]string, error) {
 }
 
 // WatchPrefix is not yet implemented.
-func (c *Client) WatchPrefix(prefix string, keys []string, waitIndex uint64, stopChan chan bool) (uint64, error) {
+func (c *Client) WatchPrefix(prefix string, stopChan chan bool, opts ...easyKV.WatchOption) (uint64, error) {
 	return 0, easyKV.ErrWatchNotSupported
 }
