@@ -21,7 +21,7 @@ type Client struct {
 	configName string
 }
 
-func New(name string, opts ...Option) (easyKV.ReadWatcher, error) {
+func New(namespace, name string, opts ...Option) (easyKV.ReadWatcher, error) {
 	var (
 		options Options
 		cfg     *rest.Config
@@ -51,7 +51,7 @@ func New(name string, opts ...Option) (easyKV.ReadWatcher, error) {
 
 // GetValues returns all key-value pairs from the config-map
 func (c *Client) GetValues(keys []string) (map[string]string, error) {
-	cm, err := c.client.Core().ConfigMaps("").Get(c.configName)
+	cm, err := c.client.Core().ConfigMaps(c.Namespace).Get(c.configName)
 	if err != nil {
 		return nil, err
 	}
