@@ -97,7 +97,7 @@ func (c *Client) WatchPrefix(prefix string, stopChan chan bool, opts ...easyKV.W
 	for {
 		select {
 		case <-stopChan:
-			return 0, nil
+			return 0, easyKV.ErrWatchCanceled
 		case event := <-w.ResultChan():
 			if event.Type == watch.Modified {
 				d := event.Object.(*v1.ConfigMap)
