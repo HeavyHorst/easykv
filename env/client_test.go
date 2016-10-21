@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/HeavyHorst/easyKV"
+	"github.com/HeavyHorst/easyKV/testutils"
 
 	. "gopkg.in/check.v1"
 )
@@ -44,17 +45,11 @@ func (s *FilterSuite) TestWatchPrefix(t *C) {
 
 func (s *FilterSuite) TestGetValues(t *C) {
 	//set some env vars
-	os.Setenv("ENVTEST_FOO_BAR", "some_data")
-	os.Setenv("ENVTEST_BAR_FOO", "data_some")
+	os.Setenv("PREMTEST_DATABASE_URL", "www.google.de")
+	os.Setenv("PREMTEST_DATABASE_USER", "Boris")
+	os.Setenv("REMTEST_DATABASE_HOSTS_192.168.0.1", "test1")
+	os.Setenv("REMTEST_DATABASE_HOSTS_192.168.0.2", "test2")
 
 	c, _ := New()
-	m, err := c.GetValues([]string{"/envtest"})
-	if err != nil {
-		t.Error(err)
-	}
-
-	t.Check(len(m), Equals, 2)
-	t.Check(m["/envtest/foo/bar"], Equals, "some_data")
-	t.Check(m["/envtest/bar/foo"], Equals, "data_some")
-
+	testutils.GetValues(t, c)
 }
