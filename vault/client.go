@@ -201,6 +201,7 @@ func (c *Client) GetValues(keys []string) (map[string]string, error) {
 			js, _ := json.Marshal(resp.Data)
 			vars[key] = string(js)
 			flatten(key, resp.Data, vars)
+			delete(vars, key)
 		}
 	}
 	return vars, nil

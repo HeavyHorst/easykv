@@ -11,7 +11,9 @@ package file
 import (
 	"io/ioutil"
 	"os"
+	"sync"
 	"testing"
+	"time"
 
 	"github.com/HeavyHorst/easyKV/testutils"
 
@@ -68,7 +70,10 @@ func testGetVal(file, data string, t *C) {
 	defer os.Remove(file)
 
 	c, _ := New(file)
-	testutils.GetValues(t, c)
+	err = testutils.GetValues(t, c)
+	if err != nil {
+		t.Error(err)
+	}
 }
 
 func (s *FilterSuite) TestGetValuesYML(t *C) {
@@ -77,4 +82,48 @@ func (s *FilterSuite) TestGetValuesYML(t *C) {
 
 func (s *FilterSuite) TestGetValuesJSON(t *C) {
 	testGetVal(filepathJSON, testfileJSON, t)
+}
+
+func (s *FilterSuite) TestWatchPrefix(t *C) {
+	err := ioutil.WriteFile(filepathYML, []byte(testfileYML), 0666)
+	if err != nil {
+		t.Error(err)
+	}
+	defer os.Remove(filepathYML)
+
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		c, _ := New(filepathYML)
+		stop := make(chan bool)
+		testutils.WatchPrefix(t, c, stop, "/", []string{})
+	}()
+
+	time.Sleep(100 * time.Millisecond)
+	err = ioutil.WriteFile(filepathYML, []byte(testfileJSON), 0666)
+	if err != nil {
+		t.Error(err)
+	}
+	wg.Wait()
+}
+
+func (s *FilterSuite) TestWatchPrefixCancel(t *C) {
+	err := ioutil.WriteFile(filepathYML, []byte(testfileYML), 0666)
+	if err != nil {
+		t.Error(err)
+	}
+	defer os.Remove(filepathYML)
+
+	stop := make(chan bool)
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		c, _ := New(filepathYML)
+		testutils.WatchPrefix(t, c, stop, "/", []string{})
+	}()
+
+	close(stop)
+	wg.Wait()
 }

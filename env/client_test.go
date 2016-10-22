@@ -12,7 +12,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/HeavyHorst/easyKV"
 	"github.com/HeavyHorst/easyKV/testutils"
 
 	. "gopkg.in/check.v1"
@@ -37,10 +36,7 @@ func (s *FilterSuite) TestClean(t *C) {
 
 func (s *FilterSuite) TestWatchPrefix(t *C) {
 	c, _ := New()
-	stop := make(chan bool)
-	num, err := c.WatchPrefix("", stop)
-	t.Check(num, Equals, uint64(0))
-	t.Check(err, Equals, easyKV.ErrWatchNotSupported)
+	testutils.WatchPrefixError(t, c)
 }
 
 func (s *FilterSuite) TestGetValues(t *C) {
