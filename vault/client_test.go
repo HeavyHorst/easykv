@@ -76,8 +76,8 @@ func (s *FilterSuite) TestGetParameterEmptyMap(t *C) {
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
-		defer panicToError(&err)
 		defer wg.Done()
+		defer panicToError(&err)
 		getParameter("test", m)
 	}()
 	wg.Wait()
