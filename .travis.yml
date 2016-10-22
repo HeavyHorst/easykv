@@ -23,7 +23,6 @@ before_install:
   - vault mount -path remtest generic
 
 go:
-  - 1.6
   - 1.7
 
 env:
