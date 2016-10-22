@@ -2,9 +2,10 @@ language: go
 
 before_install:
   # install consul
+  - mkdir consultemp
   - wget https://releases.hashicorp.com/consul/0.7.0/consul_0.7.0_linux_amd64.zip
-  - unzip consul_0.7.0_linux_amd64.zip
-  - sudo mv consul /bin/
+  - unzip -d consultemp consul_0.7.0_linux_amd64.zip
+  - sudo mv consultemp/consul /bin/
   - consul agent -server -bootstrap-expect 1 -data-dir /tmp/consul &
   # install etcd
   - curl -L https://github.com/coreos/etcd/releases/download/v3.0.9/etcd-v3.0.9-linux-amd64.tar.gz -o etcd-v3.0.9-linux-amd64.tar.gz
@@ -13,9 +14,10 @@ before_install:
   - sudo mv etcd-v3.0.9-linux-amd64/etcdctl /bin/
   - etcd &
   # Install vault
+  - mkdir vaulttemp
   - wget https://releases.hashicorp.com/vault/0.6.1/vault_0.6.1_linux_amd64.zip
-  - unzip vault_0.6.1_linux_amd64.zip
-  - sudo mv vault /bin/
+  - unzip -d vaulttemp vault_0.6.1_linux_amd64.zip
+  - sudo mv vaulttemp/vault /bin/
   - vault server -dev &
   - vault mount -path premtest generic
   - vault mount -path remtest generic
