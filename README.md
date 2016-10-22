@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/HeavyHorst/easyKV)](https://goreportcard.com/report/github.com/HeavyHorst/easyKV) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/HeavyHorst/easyKV/master/LICENCE)
+[![Build Status](https://travis-ci.org/HeavyHorst/easyKV.svg?branch=master)](https://travis-ci.org/HeavyHorst/easyKV) [![Go Report Card](https://goreportcard.com/badge/github.com/HeavyHorst/easyKV)](https://goreportcard.com/report/github.com/HeavyHorst/easyKV) [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/HeavyHorst/easyKV/master/LICENCE)
 [![](https://godoc.org/github.com/HeavyHorst/easyKV?status.svg)](http://godoc.org/github.com/HeavyHorst/easyKV)
 
 # easyKV
