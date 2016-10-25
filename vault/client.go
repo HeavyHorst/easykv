@@ -180,8 +180,14 @@ func (c *Client) Close() {
 
 // GetValues queries etcd for keys prefixed by prefix.
 func (c *Client) GetValues(keys []string) (map[string]string, error) {
-	vars := make(map[string]string)
+	branches := make(map[string]bool)
+
 	for _, key := range keys {
+		walkTree(c.client, key, branches)
+	}
+
+	vars := make(map[string]string)
+	for key := range branches {
 		resp, err := c.client.Logical().Read(key)
 
 		if err != nil {
@@ -205,6 +211,45 @@ func (c *Client) GetValues(keys []string) (map[string]string, error) {
 		}
 	}
 	return vars, nil
+}
+
+// recursively walk the branches in the Vault, adding to branches map
+func walkTree(c *vaultapi.Client, key string, branches map[string]bool) error {
+	// strip trailing slash as long as it's not the only character
+	if last := len(key) - 1; last > 0 && key[last] == '/' {
+		key = key[:last]
+	}
+
+	if branches[key] {
+		// already processed this branch
+		return nil
+	}
+	branches[key] = true
+
+	resp, err := c.Logical().List(key)
+	if err != nil {
+		return err
+	}
+	if resp == nil || resp.Data == nil || resp.Data["keys"] == nil {
+		return nil
+	}
+
+	switch resp.Data["keys"].(type) {
+	case []interface{}:
+		// expected
+	default:
+		return nil
+	}
+
+	keyList := resp.Data["keys"].([]interface{})
+	for _, innerKey := range keyList {
+		switch innerKey.(type) {
+		case string:
+			innerKey = path.Join(key, "/", innerKey.(string))
+			walkTree(c, innerKey.(string), branches)
+		}
+	}
+	return nil
 }
 
 // isKV checks if a given map has only one key of type string

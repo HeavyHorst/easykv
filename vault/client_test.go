@@ -57,17 +57,7 @@ func (s *FilterSuite) TestGetValues(t *C) {
 	c.client.Logical().Write("/premtest/database/user", map[string]interface{}{"value": "Boris"})
 	c.client.Logical().Write("/remtest/database/hosts", map[string]interface{}{"192.168.0.1": "test1", "192.168.0.2": "test2"})
 
-	// the vault backend can't recursively fetch keys like the other backends
-	//m, err := c.GetValues([]string{"/remtest", "/premtest"})
-	m, err := c.GetValues([]string{
-		"/premtest/database/url",
-		"/premtest/database/user",
-		"/remtest/database/hosts",
-	})
-	if err != nil {
-		t.Error(err)
-	}
-	t.Check(m, DeepEquals, testutils.GetExpected())
+	testutils.GetValues(t, c)
 }
 
 func (s *FilterSuite) TestGetParameterEmptyMap(t *C) {
