@@ -9,6 +9,7 @@
 package file
 
 import (
+	"context"
 	"io/ioutil"
 	"os"
 	"sync"
@@ -96,8 +97,7 @@ func (s *FilterSuite) TestWatchPrefix(t *C) {
 	go func() {
 		defer wg.Done()
 		c, _ := New(filepathYML)
-		stop := make(chan bool)
-		testutils.WatchPrefix(t, c, stop, "/", []string{})
+		testutils.WatchPrefix(t, c, context.Background(), "/", []string{})
 	}()
 
 	time.Sleep(100 * time.Millisecond)
@@ -115,15 +115,15 @@ func (s *FilterSuite) TestWatchPrefixCancel(t *C) {
 	}
 	defer os.Remove(filepathYML)
 
-	stop := make(chan bool)
+	ctx, cancel := context.WithCancel(context.Background())
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		c, _ := New(filepathYML)
-		testutils.WatchPrefix(t, c, stop, "/", []string{})
+		testutils.WatchPrefix(t, c, ctx, "/", []string{})
 	}()
 
-	close(stop)
+	cancel()
 	wg.Wait()
 }

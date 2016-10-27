@@ -9,6 +9,8 @@
 package testutils
 
 import (
+	"context"
+
 	"github.com/HeavyHorst/easyKV"
 
 	. "gopkg.in/check.v1"
@@ -46,8 +48,8 @@ func GetValues(t *C, c easyKV.ReadWatcher) error {
 	return nil
 }
 
-func WatchPrefix(t *C, c easyKV.ReadWatcher, stop chan bool, prefix string, keys []string) uint64 {
-	n, err := c.WatchPrefix(prefix, stop, easyKV.WithWaitIndex(0), easyKV.WithKeys(keys))
+func WatchPrefix(t *C, c easyKV.ReadWatcher, ctx context.Context, prefix string, keys []string) uint64 {
+	n, err := c.WatchPrefix(prefix, ctx, easyKV.WithWaitIndex(0), easyKV.WithKeys(keys))
 	if err != nil {
 		if err != easyKV.ErrWatchCanceled {
 			t.Error(err)
@@ -57,8 +59,7 @@ func WatchPrefix(t *C, c easyKV.ReadWatcher, stop chan bool, prefix string, keys
 }
 
 func WatchPrefixError(t *C, c easyKV.ReadWatcher) {
-	stop := make(chan bool)
-	num, err := c.WatchPrefix("", stop)
+	num, err := c.WatchPrefix("", context.Background())
 	t.Check(num, Equals, uint64(0))
 	t.Check(err, Equals, easyKV.ErrWatchNotSupported)
 }

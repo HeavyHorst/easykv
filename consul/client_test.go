@@ -9,6 +9,7 @@
 package consul
 
 import (
+	"context"
 	"sync"
 	"testing"
 	"time"
@@ -52,8 +53,7 @@ func (s *FilterSuite) TestWatchPrefix(t *C) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		stop := make(chan bool)
-		testutils.WatchPrefix(t, c, stop, "/", []string{})
+		testutils.WatchPrefix(t, c, context.Background(), "/", []string{})
 	}()
 
 	time.Sleep(100 * time.Millisecond)
@@ -69,14 +69,14 @@ func (s *FilterSuite) TestWatchPrefixCancel(t *C) {
 	}
 	defer c.Close()
 
-	stop := make(chan bool)
+	ctx, cancel := context.WithCancel(context.Background())
 	wg := sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		testutils.WatchPrefix(t, c, stop, "/", []string{})
+		testutils.WatchPrefix(t, c, ctx, "/", []string{})
 	}()
 
-	close(stop)
+	cancel()
 	wg.Wait()
 }
