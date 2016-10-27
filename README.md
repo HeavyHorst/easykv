@@ -14,7 +14,7 @@ A **storage backend** in `easyKV` should implement (fully or partially) this int
 ```go
 type ReadWatcher interface {
 	GetValues(keys []string) (map[string]string, error)
-	WatchPrefix(prefix string, stopChan chan bool, opts ...WatchOption) (uint64, error)
+	WatchPrefix(prefix string, ctx context.Context, opts ...WatchOption) (uint64, error)
 	Close()
 }
 ```
