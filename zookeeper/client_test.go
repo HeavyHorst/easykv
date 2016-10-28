@@ -15,7 +15,7 @@ import (
 	"time"
 
 	"github.com/HeavyHorst/easyKV/testutils"
-	"github.com/samuel/go-zookeeper/zk"
+	"github.com/tevino/go-zookeeper/zk"
 
 	. "gopkg.in/check.v1"
 )
