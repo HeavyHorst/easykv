@@ -24,9 +24,8 @@ var _ = Suite(&FilterSuite{})
 
 func (s *FilterSuite) TestNew(t *C) {
 	ba := BasicAuthOptions{
-		BasicAuth: false,
-		Username:  "",
-		Password:  "",
+		Username: "",
+		Password: "",
 	}
 
 	tls := TLSOptions{
