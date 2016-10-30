@@ -40,4 +40,4 @@ services:
   - redis
 
 script:
-  - go test ./... -gocheck.vv -cover -race
+  - go test ./... -cover -race
