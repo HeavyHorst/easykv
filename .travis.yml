@@ -31,7 +31,7 @@ before_install:
   - zookeeper-3.4.8/bin/zkServer.sh start
 
 go:
-  - 1.7
+  - 1.7.4
 
 env:
   - VAULT_ADDR='http://127.0.0.1:8200'
@@ -40,4 +40,7 @@ services:
   - redis
 
 script:
-  - go test ./... -cover -race
+  - ./test
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
