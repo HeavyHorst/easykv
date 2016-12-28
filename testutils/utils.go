@@ -49,7 +49,7 @@ func GetValues(t *C, c easyKV.ReadWatcher) error {
 }
 
 func WatchPrefix(t *C, c easyKV.ReadWatcher, ctx context.Context, prefix string, keys []string) uint64 {
-	n, err := c.WatchPrefix(prefix, ctx, easyKV.WithWaitIndex(0), easyKV.WithKeys(keys))
+	n, err := c.WatchPrefix(ctx, prefix, easyKV.WithWaitIndex(0), easyKV.WithKeys(keys))
 	if err != nil {
 		if err != easyKV.ErrWatchCanceled {
 			t.Error(err)
@@ -59,7 +59,7 @@ func WatchPrefix(t *C, c easyKV.ReadWatcher, ctx context.Context, prefix string,
 }
 
 func WatchPrefixError(t *C, c easyKV.ReadWatcher) {
-	num, err := c.WatchPrefix("", context.Background())
+	num, err := c.WatchPrefix(context.Background(), "")
 	t.Check(num, Equals, uint64(0))
 	t.Check(err, Equals, easyKV.ErrWatchNotSupported)
 }

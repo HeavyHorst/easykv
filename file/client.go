@@ -114,7 +114,7 @@ func nodeWalk(node map[interface{}]interface{}, key string, vars map[string]stri
 
 // WatchPrefix watches the file for changes with fsnotify.
 // Prefix, keys and waitIndex are only here to implement the StoreClient interface.
-func (c *Client) WatchPrefix(prefix string, ctx context.Context, opts ...easyKV.WatchOption) (uint64, error) {
+func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.WatchOption) (uint64, error) {
 	if c.isURL {
 		// watch is not supported for urls
 		return 0, easyKV.ErrWatchNotSupported
