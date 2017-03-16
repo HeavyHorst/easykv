@@ -8,7 +8,7 @@
 
 package etcd
 
-// Options contains all values that are needed to connect to etcd
+// Options contains all values that are needed to connect to etcd.
 type Options struct {
 	Nodes   []string
 	Version int
@@ -16,30 +16,30 @@ type Options struct {
 	Auth    BasicAuthOptions
 }
 
-// TLSOptions contains all certificates and keys
+// TLSOptions contains all certificates and keys.
 type TLSOptions struct {
 	ClientCert   string
 	ClientKey    string
 	ClientCaKeys string
 }
 
-// BasicAuthOptions contains options regarding to basic authentication
+// BasicAuthOptions contains options regarding to basic authentication.
 type BasicAuthOptions struct {
 	Username string
 	Password string
 }
 
-// Option configures the etcd client
+// Option configures the etcd client.
 type Option func(*Options)
 
-// WithTLSOptions sets the TLSOptions
+// WithTLSOptions sets the TLSOptions.
 func WithTLSOptions(tls TLSOptions) Option {
 	return func(o *Options) {
 		o.TLS = tls
 	}
 }
 
-// WithBasicAuth enables the basic authentication and sets the username and password
+// WithBasicAuth enables the basic authentication and sets the username and password.
 func WithBasicAuth(b BasicAuthOptions) Option {
 	return func(o *Options) {
 		o.Auth = b

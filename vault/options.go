@@ -8,7 +8,7 @@
 
 package vault
 
-// Options contains all values that are needed to connect to vault
+// Options contains all values that are needed to connect to vault.
 type Options struct {
 	RoleID   string
 	SecretID string
@@ -19,65 +19,65 @@ type Options struct {
 	Auth     BasicAuthOptions
 }
 
-// BasicAuthOptions contains options regarding to basic authentication
+// BasicAuthOptions contains options regarding to basic authentication.
 type BasicAuthOptions struct {
 	Username string
 	Password string
 }
 
-// TLSOptions contains all certificates and keys
+// TLSOptions contains all certificates and keys.
 type TLSOptions struct {
 	ClientCert   string
 	ClientKey    string
 	ClientCaKeys string
 }
 
-// Option configures the vault client
+// Option configures the vault client.
 type Option func(*Options)
 
-// WithAppID sets the AppID (app-id auth method)
+// WithAppID sets the AppID (app-id auth method).
 func WithAppID(id string) Option {
 	return func(o *Options) {
 		o.AppID = id
 	}
 }
 
-// WithUserID sets the UserID (app-id auth method)
+// WithUserID sets the UserID (app-id auth method).
 func WithUserID(id string) Option {
 	return func(o *Options) {
 		o.UserID = id
 	}
 }
 
-// WithRoleID sets the RoleID (approle auth method)
+// WithRoleID sets the RoleID (approle auth method).
 func WithRoleID(id string) Option {
 	return func(o *Options) {
 		o.RoleID = id
 	}
 }
 
-// WithSecretID sets the ScretID (approle auth method)
+// WithSecretID sets the ScretID (approle auth method).
 func WithSecretID(id string) Option {
 	return func(o *Options) {
 		o.SecretID = id
 	}
 }
 
-// WithToken sets the token (toke auth method)
+// WithToken sets the token (toke auth method).
 func WithToken(token string) Option {
 	return func(o *Options) {
 		o.Token = token
 	}
 }
 
-// WithTLSOptions sets the TLSOptions
+// WithTLSOptions sets the TLSOptions.
 func WithTLSOptions(tls TLSOptions) Option {
 	return func(o *Options) {
 		o.TLS = tls
 	}
 }
 
-// WithBasicAuth enables the basic authentication and sets the username and password
+// WithBasicAuth enables the basic authentication and sets the username and password.
 func WithBasicAuth(b BasicAuthOptions) Option {
 	return func(o *Options) {
 		o.Auth = b

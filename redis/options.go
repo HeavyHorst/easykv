@@ -8,17 +8,17 @@
 
 package redis
 
-// Option configures the redis client
+// Option configures the redis client.
 type Option func(*Client)
 
-// WithPassword sets the redis password
+// WithPassword sets the redis password.
 func WithPassword(pw string) Option {
 	return func(o *Client) {
 		o.password = pw
 	}
 }
 
-// WithDatabase configures the redis database
+// WithDatabase configures the redis database.
 func WithDatabase(db int) Option {
 	return func(o *Client) {
 		o.db = db
