@@ -104,14 +104,16 @@ func New(machines []string, opts ...Option) (*Client, error) {
 	return &c, err
 }
 
-// Close closes the client connection
+// Close closes the redis client connection.
 func (c *Client) Close() {
 	if c.client != nil {
 		c.client.Close()
 	}
 }
 
-// GetValues queries redis for keys prefixed by prefix.
+// GetValues is used to lookup all keys with a prefix.
+// Several prefixes can be specified in the keys array.
+// The redis SCAN operation is, for performance reasons, limited to 1000 results.
 func (c *Client) GetValues(keys []string) (map[string]string, error) {
 	// Ensure we have a connected redis client
 	rClient, err := c.connectedClient()

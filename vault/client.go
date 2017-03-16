@@ -179,12 +179,14 @@ func New(address, authType string, opts ...Option) (*Client, error) {
 	return &Client{c}, nil
 }
 
-// Close closes the client connection
+// Close is only meant to fulfill the easyKV.ReadWatcher interface.
+// Does nothing.
 func (c *Client) Close() {
 	return
 }
 
-// GetValues queries etcd for keys prefixed by prefix.
+// GetValues is used to lookup all keys with a prefix.
+// Several prefixes can be specified in the keys array.
 func (c *Client) GetValues(keys []string) (map[string]string, error) {
 	branches := make(map[string]bool)
 

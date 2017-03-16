@@ -41,7 +41,7 @@ func New(machines []string) (*Client, error) {
 	return &Client{c}, nil
 }
 
-// Close closes the client connection
+// Close closes the zookeper client connection.
 func (c *Client) Close() {
 	if c.client != nil {
 		c.client.Close()
@@ -82,7 +82,8 @@ func nodeWalk(prefix string, c *Client, vars map[string]string) error {
 	return nil
 }
 
-// GetValues queries zookeeper for keys prefixed by prefix.
+// GetValues is used to lookup all keys with a prefix.
+// Several prefixes can be specified in the keys array.
 func (c *Client) GetValues(keys []string) (map[string]string, error) {
 	vars := make(map[string]string)
 	for _, v := range keys {

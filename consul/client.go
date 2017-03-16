@@ -27,12 +27,12 @@ import (
 	"github.com/hashicorp/consul/api"
 )
 
-// Client provides a wrapper around the consulkv client
+// Client is a wrapper around the consul KV-client.
 type Client struct {
 	client *api.KV
 }
 
-// New returns a new client to Consul for the given address
+// New returns a new client to Consul for the given address.
 func New(nodes []string, opts ...Option) (*Client, error) {
 	var options Options
 	for _, o := range opts {
@@ -76,12 +76,14 @@ func New(nodes []string, opts ...Option) (*Client, error) {
 	return &Client{client.KV()}, nil
 }
 
-// Close closes the client connection
+// Close is only meant to fulfill the easyKV.ReadWatcher interface.
+// Does nothing.
 func (c *Client) Close() {
 	return
 }
 
-// GetValues queries Consul for keys
+// GetValues is used to lookup all keys with a prefix.
+// Several prefixes can be specified in the keys array.
 func (c *Client) GetValues(keys []string) (map[string]string, error) {
 	vars := make(map[string]string)
 	for _, key := range keys {

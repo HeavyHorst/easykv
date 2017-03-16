@@ -41,7 +41,8 @@ func New(filepath string) (*Client, error) {
 	return c, nil
 }
 
-// GetValues returns all key-value pairs from the yaml or json file.
+// GetValues returns all key-value pairs from the yaml or json file where the
+// keys begins with one of the prefixes specified in the keys array.
 func (c *Client) GetValues(keys []string) (map[string]string, error) {
 	yamlMap := make(map[interface{}]interface{})
 	vars := make(map[string]string)
@@ -84,7 +85,8 @@ func (c *Client) GetValues(keys []string) (map[string]string, error) {
 	return kvs, nil
 }
 
-// Close closes the client connection
+// Close is only meant to fulfill the easyKV.ReadWatcher interface.
+// Does nothing.
 func (c *Client) Close() {
 	return
 }
@@ -116,6 +118,7 @@ func nodeWalk(node map[interface{}]interface{}, key string, vars map[string]stri
 // WatchPrefix watches the file for changes with fsnotify.
 // Prefix, keys and waitIndex are only here to implement the StoreClient interface.
 // WatchPrefix is only supported for local files. Remote files over http/https arent supported.
+// Remote filesystems like nfs are also not supported.
 func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.WatchOption) (uint64, error) {
 	if c.isURL {
 		// watch is not supported for urls
