@@ -19,7 +19,7 @@ before_install:
   - unzip -d vaulttemp vault_0.6.5_linux_amd64.zip
   - sudo mv vaulttemp/vault /bin/
   - vault server -dev &
-  - vault mount -path premtest generic
+  - sleep 2 && vault mount -path premtest generic
   - vault mount -path remtest generic
   # Install zookeeper
   - wget http://www.eu.apache.org/dist/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
