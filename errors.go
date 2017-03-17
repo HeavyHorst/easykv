@@ -10,8 +10,8 @@ package easyKV
 
 import "errors"
 
-// ErrWatchNotSupported is returned if the backend has no watch support and the WatchPrefix method is called
+// ErrWatchNotSupported is returned if the backend has no watch support and the WatchPrefix method is called.
 var ErrWatchNotSupported = errors.New("this backend doesn't support watches - use polling instead")
 
-// ErrWatchCanceled is returned is the watcher is canceled
+// ErrWatchCanceled is returned if the watcher is canceled.
 var ErrWatchCanceled = errors.New("watcher error: watcher canceled")
