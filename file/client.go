@@ -96,20 +96,20 @@ func nodeWalk(node map[interface{}]interface{}, key string, vars map[string]stri
 	for k, v := range node {
 		key := key + "/" + k.(string)
 
-		switch v.(type) {
+		switch v := v.(type) {
 		case map[interface{}]interface{}:
-			nodeWalk(v.(map[interface{}]interface{}), key, vars)
+			nodeWalk(v, key, vars)
 		case []interface{}:
-			for _, j := range v.([]interface{}) {
-				switch j.(type) {
+			for _, j := range v {
+				switch j := j.(type) {
 				case map[interface{}]interface{}:
-					nodeWalk(j.(map[interface{}]interface{}), key, vars)
+					nodeWalk(j, key, vars)
 				case string:
-					vars[key+"/"+j.(string)] = ""
+					vars[key+"/"+j] = ""
 				}
 			}
 		case string:
-			vars[key] = v.(string)
+			vars[key] = v
 		}
 	}
 	return nil
