@@ -11,7 +11,7 @@ package testutils
 import (
 	"context"
 
-	"github.com/HeavyHorst/easyKV"
+	"github.com/HeavyHorst/easykv"
 
 	. "gopkg.in/check.v1"
 )
@@ -32,8 +32,8 @@ func GetExpected() map[string]string {
 	return expected
 }
 
-// GetValues is a util function to test the easyKV.ReadWatcher.GetValues Method
-func GetValues(t *C, c easyKV.ReadWatcher) error {
+// GetValues is a util function to test the easykv.ReadWatcher.GetValues Method
+func GetValues(t *C, c easykv.ReadWatcher) error {
 	m, err := c.GetValues([]string{"/remtest", "/premtest"})
 	if err != nil {
 		return err
@@ -48,18 +48,18 @@ func GetValues(t *C, c easyKV.ReadWatcher) error {
 	return nil
 }
 
-func WatchPrefix(t *C, c easyKV.ReadWatcher, ctx context.Context, prefix string, keys []string) uint64 {
-	n, err := c.WatchPrefix(ctx, prefix, easyKV.WithWaitIndex(0), easyKV.WithKeys(keys))
+func WatchPrefix(t *C, c easykv.ReadWatcher, ctx context.Context, prefix string, keys []string) uint64 {
+	n, err := c.WatchPrefix(ctx, prefix, easykv.WithWaitIndex(0), easykv.WithKeys(keys))
 	if err != nil {
-		if err != easyKV.ErrWatchCanceled {
+		if err != easykv.ErrWatchCanceled {
 			t.Error(err)
 		}
 	}
 	return n
 }
 
-func WatchPrefixError(t *C, c easyKV.ReadWatcher) {
+func WatchPrefixError(t *C, c easykv.ReadWatcher) {
 	num, err := c.WatchPrefix(context.Background(), "")
 	t.Check(num, Equals, uint64(0))
-	t.Check(err, Equals, easyKV.ErrWatchNotSupported)
+	t.Check(err, Equals, easykv.ErrWatchNotSupported)
 }

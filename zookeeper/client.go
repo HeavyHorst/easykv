@@ -22,7 +22,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/HeavyHorst/easyKV"
+	"github.com/HeavyHorst/easykv"
 	zk "github.com/tevino/go-zookeeper/zk"
 )
 
@@ -137,8 +137,8 @@ func (c *Client) watch(key string, respChan chan watchResponse, ctx context.Cont
 }
 
 // WatchPrefix watches a specific prefix for changes.
-func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.WatchOption) (uint64, error) {
-	var options easyKV.WatchOptions
+func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easykv.WatchOption) (uint64, error) {
+	var options easykv.WatchOptions
 	for _, o := range opts {
 		o(&options)
 	}

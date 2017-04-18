@@ -23,7 +23,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/HeavyHorst/easyKV"
+	"github.com/HeavyHorst/easykv"
 	"github.com/hashicorp/consul/api"
 )
 
@@ -76,7 +76,7 @@ func New(nodes []string, opts ...Option) (*Client, error) {
 	return &Client{client.KV()}, nil
 }
 
-// Close is only meant to fulfill the easyKV.ReadWatcher interface.
+// Close is only meant to fulfill the easykv.ReadWatcher interface.
 // Does nothing.
 func (c *Client) Close() {
 	return
@@ -105,8 +105,8 @@ type watchResponse struct {
 }
 
 // WatchPrefix watches a specific prefix for changes.
-func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.WatchOption) (uint64, error) {
-	var options easyKV.WatchOptions
+func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easykv.WatchOption) (uint64, error) {
+	var options easykv.WatchOptions
 	for _, o := range opts {
 		o(&options)
 	}
@@ -126,7 +126,7 @@ func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.
 	for {
 		select {
 		case <-ctx.Done():
-			return options.WaitIndex, easyKV.ErrWatchCanceled
+			return options.WaitIndex, easykv.ErrWatchCanceled
 		case r := <-respChan:
 			return r.waitIndex, r.err
 		}

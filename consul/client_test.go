@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/HeavyHorst/easyKV/testutils"
+	"github.com/HeavyHorst/easykv/testutils"
 	"github.com/hashicorp/consul/api"
 
 	. "gopkg.in/check.v1"

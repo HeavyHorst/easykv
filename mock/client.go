@@ -12,7 +12,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/HeavyHorst/easyKV"
+	"github.com/HeavyHorst/easykv"
 )
 
 // Client is the mock client
@@ -40,7 +40,7 @@ func (c *Client) Close() {
 }
 
 // WatchPrefix mock
-func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.WatchOption) (uint64, error) {
+func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easykv.WatchOption) (uint64, error) {
 	time.Sleep(2 * time.Second)
 	return 0, c.Err
 }

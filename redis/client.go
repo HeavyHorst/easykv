@@ -22,7 +22,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/HeavyHorst/easyKV"
+	"github.com/HeavyHorst/easykv"
 	"github.com/garyburd/redigo/redis"
 )
 
@@ -166,6 +166,6 @@ func (c *Client) GetValues(keys []string) (map[string]string, error) {
 }
 
 // WatchPrefix is not yet implemented.
-func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.WatchOption) (uint64, error) {
-	return 0, easyKV.ErrWatchNotSupported
+func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easykv.WatchOption) (uint64, error) {
+	return 0, easykv.ErrWatchNotSupported
 }

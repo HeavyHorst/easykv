@@ -11,7 +11,7 @@ package redis
 import (
 	"testing"
 
-	"github.com/HeavyHorst/easyKV/testutils"
+	"github.com/HeavyHorst/easykv/testutils"
 
 	. "gopkg.in/check.v1"
 )

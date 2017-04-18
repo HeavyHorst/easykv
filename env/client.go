@@ -17,7 +17,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/HeavyHorst/easyKV"
+	"github.com/HeavyHorst/easykv"
 )
 
 var replacer = strings.NewReplacer("/", "_")
@@ -31,7 +31,7 @@ func New() (*Client, error) {
 	return &Client{}, nil
 }
 
-// Close is only meant to fulfill the easyKV.ReadWatcher interface.
+// Close is only meant to fulfill the easykv.ReadWatcher interface.
 // Does nothing.
 func (c *Client) Close() {
 	return
@@ -70,6 +70,6 @@ func clean(key string) string {
 }
 
 // WatchPrefix - not implemented at the moment
-func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.WatchOption) (uint64, error) {
-	return 0, easyKV.ErrWatchNotSupported
+func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easykv.WatchOption) (uint64, error) {
+	return 0, easykv.ErrWatchNotSupported
 }

@@ -24,7 +24,7 @@ import (
 	"net/http"
 	"path"
 
-	"github.com/HeavyHorst/easyKV"
+	"github.com/HeavyHorst/easykv"
 	vaultapi "github.com/hashicorp/vault/api"
 )
 
@@ -179,7 +179,7 @@ func New(address, authType string, opts ...Option) (*Client, error) {
 	return &Client{c}, nil
 }
 
-// Close is only meant to fulfill the easyKV.ReadWatcher interface.
+// Close is only meant to fulfill the easykv.ReadWatcher interface.
 // Does nothing.
 func (c *Client) Close() {
 	return
@@ -288,6 +288,6 @@ func flatten(key string, value interface{}, vars map[string]string) {
 }
 
 // WatchPrefix - not implemented at the moment
-func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.WatchOption) (uint64, error) {
-	return 0, easyKV.ErrWatchNotSupported
+func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easykv.WatchOption) (uint64, error) {
+	return 0, easykv.ErrWatchNotSupported
 }

@@ -16,7 +16,7 @@ import (
 
 	"time"
 
-	"github.com/HeavyHorst/easyKV"
+	"github.com/HeavyHorst/easykv"
 	"github.com/fsnotify/fsnotify"
 	"gopkg.in/yaml.v2"
 )
@@ -85,7 +85,7 @@ func (c *Client) GetValues(keys []string) (map[string]string, error) {
 	return kvs, nil
 }
 
-// Close is only meant to fulfill the easyKV.ReadWatcher interface.
+// Close is only meant to fulfill the easykv.ReadWatcher interface.
 // Does nothing.
 func (c *Client) Close() {
 	return
@@ -119,10 +119,10 @@ func nodeWalk(node map[interface{}]interface{}, key string, vars map[string]stri
 // Prefix, keys and waitIndex are only here to implement the StoreClient interface.
 // WatchPrefix is only supported for local files. Remote files over http/https arent supported.
 // Remote filesystems like nfs are also not supported.
-func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.WatchOption) (uint64, error) {
+func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easykv.WatchOption) (uint64, error) {
 	if c.isURL {
 		// watch is not supported for urls
-		return 0, easyKV.ErrWatchNotSupported
+		return 0, easykv.ErrWatchNotSupported
 	}
 
 	watcher, err := fsnotify.NewWatcher()
@@ -145,7 +145,7 @@ func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.
 		case err := <-watcher.Errors:
 			return 0, err
 		case <-ctx.Done():
-			return 0, easyKV.ErrWatchCanceled
+			return 0, easykv.ErrWatchCanceled
 		}
 	}
 }

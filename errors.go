@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-package easyKV
+package easykv
 
 import "errors"
 

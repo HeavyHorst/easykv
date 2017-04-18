@@ -26,7 +26,7 @@ import (
 
 	"context"
 
-	"github.com/HeavyHorst/easyKV"
+	"github.com/HeavyHorst/easykv"
 	"github.com/coreos/etcd/client"
 )
 
@@ -97,7 +97,7 @@ func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, 
 	return &Client{kapi}, nil
 }
 
-// Close is only meant to fulfill the easyKV.ReadWatcher interface.
+// Close is only meant to fulfill the easykv.ReadWatcher interface.
 // Does nothing.
 func (c *Client) Close() {
 	return
@@ -140,8 +140,8 @@ func nodeWalk(node *client.Node, vars map[string]string) error {
 }
 
 // WatchPrefix watches a specific prefix for changes.
-func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.WatchOption) (uint64, error) {
-	var options easyKV.WatchOptions
+func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easykv.WatchOption) (uint64, error) {
+	var options easykv.WatchOptions
 	for _, o := range opts {
 		o(&options)
 	}
@@ -157,7 +157,7 @@ func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easyKV.
 		resp, err := watcher.Next(etcdctx)
 		if err != nil {
 			if err == context.Canceled {
-				return options.WaitIndex, easyKV.ErrWatchCanceled
+				return options.WaitIndex, easykv.ErrWatchCanceled
 			}
 			switch e := err.(type) {
 			case *client.Error:
