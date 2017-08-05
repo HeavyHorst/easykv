@@ -97,7 +97,7 @@ func (s *FilterSuite) TestWatchPrefix(t *C) {
 	go func() {
 		defer wg.Done()
 		c, _ := New(filepathYML)
-		testutils.WatchPrefix(t, c, context.Background(), "/", []string{})
+		testutils.WatchPrefix(context.Background(), t, c, "/", []string{})
 	}()
 
 	time.Sleep(100 * time.Millisecond)
@@ -121,7 +121,7 @@ func (s *FilterSuite) TestWatchPrefixCancel(t *C) {
 	go func() {
 		defer wg.Done()
 		c, _ := New(filepathYML)
-		testutils.WatchPrefix(t, c, ctx, "/", []string{})
+		testutils.WatchPrefix(ctx, t, c, "/", []string{})
 	}()
 
 	cancel()
