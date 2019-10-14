@@ -93,7 +93,7 @@ func authenticate(c *vaultapi.Client, authType string, params map[string]string)
 		if err != nil {
 			return err
 		}
-		secret, err = c.Logical().Write(url, map[string]interface{}{
+		secret, err = c.Logical().Write("/auth/kubernetes/login", map[string]interface{}{
 			"jwt":  string(jwt[:]),
 			"role": getParameter("role-id", params),
 		})
