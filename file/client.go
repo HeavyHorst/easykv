@@ -29,14 +29,41 @@ type Client struct {
 	httpClient http.Client
 }
 
+// transport is a wrapper around any provided underlying transport that will
+// also add any provided headers to any request made with this transport.
+type transport struct {
+	Headers             map[string]string
+	UnderlyingTransport http.RoundTripper
+}
+
+// RoundTrip satisfies the RoundTripper interface for our custom transport above.
+// If an underlying transport is not provided, we default to http.DefaultTransport.
+func (t *transport) RoundTrip(req *http.Request) (*http.Response, error) {
+	for k, v := range t.Headers {
+		req.Header.Add(k, v)
+	}
+	if t.UnderlyingTransport == nil {
+		t.UnderlyingTransport = http.DefaultTransport
+	}
+	return t.UnderlyingTransport.RoundTrip(req)
+}
+
 // New returns a new FileClient
 // The filepath can be a local path to a file or a remote http/https location.
-func New(filepath string) (*Client, error) {
+func New(filepath string, opts ...Option) (*Client, error) {
+	var options Options
+	for _, o := range opts {
+		o(&options)
+	}
+
 	c := &Client{filepath: filepath}
 	if strings.HasPrefix(filepath, "http://") || strings.HasPrefix(filepath, "https://") {
 		c.isURL = true
 		c.httpClient = http.Client{
 			Timeout: 5 * time.Second,
+			Transport: &transport{
+				Headers: options.Headers,
+			},
 		}
 	}
 	return c, nil
