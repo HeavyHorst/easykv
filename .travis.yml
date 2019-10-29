@@ -1,8 +1,8 @@
 language: go
 
 before_install:
-  - go get github.com/golang/lint/golint
-  - go get honnef.co/go/tools/cmd/megacheck
+  - go get golang.org/x/lint/golint
+  - go get honnef.co/go/tools/cmd/staticcheck
 
   # install consul
   - mkdir consultemp
@@ -46,7 +46,7 @@ services:
 before_script:
    - go vet ./...
    - golint ./...
-   - megacheck ./...
+   - staticcheck ./...
 
 script:
   - ./test
