@@ -18,7 +18,6 @@ import (
 
 	"github.com/HeavyHorst/easykv/testutils"
 
-	"gopkg.in/check.v1"
 	. "gopkg.in/check.v1"
 )
 
@@ -100,7 +99,7 @@ func testGetVal(file, data string, expected map[string]string, t *C) {
 		if err != nil {
 			t.Error(err)
 		}
-		t.Check(m, check.DeepEquals, expected)
+		t.Check(m, DeepEquals, expected)
 	}
 }
 
