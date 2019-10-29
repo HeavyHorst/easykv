@@ -18,6 +18,7 @@ import (
 
 	"github.com/HeavyHorst/easykv/testutils"
 
+	"gopkg.in/check.v1"
 	. "gopkg.in/check.v1"
 )
 
@@ -62,7 +63,24 @@ const testfileJSON string = `
 }
 `
 
-func testGetVal(file, data string, t *C) {
+const filepathJSON2 string = "/tmp/easyKV_filetest2.json"
+const testfileJSON2 string = `
+{
+	"remtest": [
+		1, 
+		true,
+		null
+	],
+	"premtest": {
+		"database": {
+			"url": 100,
+			"user": false
+		}
+	}
+}
+`
+
+func testGetVal(file, data string, expected map[string]string, t *C) {
 	// write testfile
 	err := ioutil.WriteFile(file, []byte(data), 0666)
 	if err != nil {
@@ -71,18 +89,37 @@ func testGetVal(file, data string, t *C) {
 	defer os.Remove(file)
 
 	c, _ := New(file)
-	err = testutils.GetValues(t, c)
-	if err != nil {
-		t.Error(err)
+
+	if expected == nil {
+		err = testutils.GetValues(t, c)
+		if err != nil {
+			t.Error(err)
+		}
+	} else {
+		m, err := c.GetValues([]string{"/remtest", "/premtest"})
+		if err != nil {
+			t.Error(err)
+		}
+		t.Check(m, check.DeepEquals, expected)
 	}
 }
 
 func (s *FilterSuite) TestGetValuesYML(t *C) {
-	testGetVal(filepathYML, testfileYML, t)
+	testGetVal(filepathYML, testfileYML, nil, t)
 }
 
 func (s *FilterSuite) TestGetValuesJSON(t *C) {
-	testGetVal(filepathJSON, testfileJSON, t)
+	testGetVal(filepathJSON, testfileJSON, nil, t)
+}
+
+func (s *FilterSuite) TestGetValuesJSON2(t *C) {
+	testGetVal(filepathJSON2, testfileJSON2, map[string]string{
+		"/remtest/1":              "",
+		"/remtest/true":           "",
+		"/remtest/<nil>":          "",
+		"/premtest/database/url":  "100",
+		"/premtest/database/user": "false",
+	}, t)
 }
 
 func (s *FilterSuite) TestWatchPrefix(t *C) {

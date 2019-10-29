@@ -10,6 +10,7 @@ package file
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -102,12 +103,12 @@ func nodeWalk(node map[interface{}]interface{}, key string, vars map[string]stri
 				switch j := j.(type) {
 				case map[interface{}]interface{}:
 					nodeWalk(j, key, vars)
-				case string:
-					vars[key+"/"+j] = ""
+				default:
+					vars[fmt.Sprintf("%s/%v", key, j)] = ""
 				}
 			}
-		case string:
-			vars[key] = v
+		default:
+			vars[key] = fmt.Sprintf("%v", v)
 		}
 	}
 	return nil
