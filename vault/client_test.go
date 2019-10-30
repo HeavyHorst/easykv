@@ -55,7 +55,8 @@ func (s *FilterSuite) TestGetValues(t *C) {
 
 	c.client.Logical().Write("/premtest/database/url", map[string]interface{}{"value": "www.google.de"})
 	c.client.Logical().Write("/premtest/database/user", map[string]interface{}{"value": "Boris"})
-	c.client.Logical().Write("/remtest/database/hosts", map[string]interface{}{"192.168.0.1": "test1", "192.168.0.2": "test2"})
+	c.client.Logical().Write("/remtest/database/hosts/0", map[string]interface{}{"name": "test1", "ip": "192.168.0.1", "size": "60"})
+	c.client.Logical().Write("/remtest/database/hosts/1", map[string]interface{}{"name": "test2", "ip": "192.168.0.2", "size": "80"})
 
 	testutils.GetValues(t, c)
 }

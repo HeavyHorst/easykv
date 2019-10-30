@@ -42,8 +42,14 @@ func (s *FilterSuite) TestGetValues(t *C) {
 	c.client.Create("/remtest", []byte(""), int32(0), zk.WorldACL(zk.PermAll))
 	c.client.Create("/remtest/database", []byte(""), int32(0), zk.WorldACL(zk.PermAll))
 	c.client.Create("/remtest/database/hosts", []byte(""), int32(0), zk.WorldACL(zk.PermAll))
-	c.client.Create("/remtest/database/hosts/192.168.0.1", []byte("test1"), int32(0), zk.WorldACL(zk.PermAll))
-	c.client.Create("/remtest/database/hosts/192.168.0.2", []byte("test2"), int32(0), zk.WorldACL(zk.PermAll))
+	c.client.Create("/remtest/database/hosts/0", []byte(""), int32(0), zk.WorldACL(zk.PermAll))
+	c.client.Create("/remtest/database/hosts/0/name", []byte("test1"), int32(0), zk.WorldACL(zk.PermAll))
+	c.client.Create("/remtest/database/hosts/0/ip", []byte("192.168.0.1"), int32(0), zk.WorldACL(zk.PermAll))
+	c.client.Create("/remtest/database/hosts/0/size", []byte("60"), int32(0), zk.WorldACL(zk.PermAll))
+	c.client.Create("/remtest/database/hosts/1", []byte(""), int32(0), zk.WorldACL(zk.PermAll))
+	c.client.Create("/remtest/database/hosts/1/name", []byte("test2"), int32(0), zk.WorldACL(zk.PermAll))
+	c.client.Create("/remtest/database/hosts/1/ip", []byte("192.168.0.2"), int32(0), zk.WorldACL(zk.PermAll))
+	c.client.Create("/remtest/database/hosts/1/size", []byte("80"), int32(0), zk.WorldACL(zk.PermAll))
 
 	err = testutils.GetValues(t, c)
 	if err != nil {

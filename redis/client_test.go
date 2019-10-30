@@ -31,8 +31,12 @@ func (s *FilterSuite) TestGetValues(t *C) {
 
 	c.client.Do("SET", "/premtest/database/url", "www.google.de")
 	c.client.Do("SET", "/premtest/database/user", "Boris")
-	c.client.Do("SET", "/remtest/database/hosts/192.168.0.1", "test1")
-	c.client.Do("SET", "/remtest/database/hosts/192.168.0.2", "test2")
+	c.client.Do("SET", "/remtest/database/hosts/0/name", "test1")
+	c.client.Do("SET", "/remtest/database/hosts/0/ip", "192.168.0.1")
+	c.client.Do("SET", "/remtest/database/hosts/0/size", "60")
+	c.client.Do("SET", "/remtest/database/hosts/1/name", "test2")
+	c.client.Do("SET", "/remtest/database/hosts/1/ip", "192.168.0.2")
+	c.client.Do("SET", "/remtest/database/hosts/1/size", "80")
 
 	testutils.GetValues(t, c)
 }

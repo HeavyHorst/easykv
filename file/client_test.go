@@ -33,8 +33,12 @@ const testfileYML string = `
 remtest:
   database:
     hosts:
-      - 192.168.0.1: test1
-      - 192.168.0.2: test2
+    - name: test1
+      ip: 192.168.0.1
+      size: 60
+    - name: test2
+      ip: 192.168.0.2
+      size: 80
 
 premtest:
   database: {url: www.google.de, user: Boris}
@@ -47,9 +51,15 @@ const testfileJSON string = `
 		"database": {
 			"hosts": [
 				{
-					"192.168.0.1": "test1",
-				    "192.168.0.2": "test2"
-		        },
+					"name": "test1",
+					"ip": "192.168.0.1",
+					"size": 60
+				},
+				{
+					"name": "test2",
+					"ip": "192.168.0.2",
+					"size": 80
+				}
 			]
 		}
 	},
@@ -66,7 +76,7 @@ const filepathJSON2 string = "/tmp/easyKV_filetest2.json"
 const testfileJSON2 string = `
 {
 	"remtest": [
-		1, 
+		1,
 		true,
 		null
 	],
@@ -113,9 +123,9 @@ func (s *FilterSuite) TestGetValuesJSON(t *C) {
 
 func (s *FilterSuite) TestGetValuesJSON2(t *C) {
 	testGetVal(filepathJSON2, testfileJSON2, map[string]string{
-		"/remtest/1":              "",
-		"/remtest/true":           "",
-		"/remtest/<nil>":          "",
+		"/remtest/0":              "1",
+		"/remtest/1":              "true",
+		"/remtest/2":              "<nil>",
 		"/premtest/database/url":  "100",
 		"/premtest/database/user": "false",
 	}, t)

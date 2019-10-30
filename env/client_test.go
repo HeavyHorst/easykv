@@ -43,8 +43,12 @@ func (s *FilterSuite) TestGetValues(t *C) {
 	//set some env vars
 	os.Setenv("PREMTEST_DATABASE_URL", "www.google.de")
 	os.Setenv("PREMTEST_DATABASE_USER", "Boris")
-	os.Setenv("REMTEST_DATABASE_HOSTS_192.168.0.1", "test1")
-	os.Setenv("REMTEST_DATABASE_HOSTS_192.168.0.2", "test2")
+	os.Setenv("REMTEST_DATABASE_HOSTS_0_NAME", "test1")
+	os.Setenv("REMTEST_DATABASE_HOSTS_0_IP", "192.168.0.1")
+	os.Setenv("REMTEST_DATABASE_HOSTS_0_SIZE", "60")
+	os.Setenv("REMTEST_DATABASE_HOSTS_1_NAME", "test2")
+	os.Setenv("REMTEST_DATABASE_HOSTS_1_IP", "192.168.0.2")
+	os.Setenv("REMTEST_DATABASE_HOSTS_1_SIZE", "80")
 
 	c, _ := New()
 	testutils.GetValues(t, c)
