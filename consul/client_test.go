@@ -36,8 +36,12 @@ func (s *FilterSuite) TestGetValues(t *C) {
 
 	c.client.Put(&api.KVPair{Key: "premtest/database/url", Value: []byte("www.google.de")}, nil)
 	c.client.Put(&api.KVPair{Key: "premtest/database/user", Value: []byte("Boris")}, nil)
-	c.client.Put(&api.KVPair{Key: "remtest/database/hosts/192.168.0.1", Value: []byte("test1")}, nil)
-	c.client.Put(&api.KVPair{Key: "remtest/database/hosts/192.168.0.2", Value: []byte("test2")}, nil)
+	c.client.Put(&api.KVPair{Key: "remtest/database/hosts/0/name", Value: []byte("test1")}, nil)
+	c.client.Put(&api.KVPair{Key: "remtest/database/hosts/0/ip", Value: []byte("192.168.0.1")}, nil)
+	c.client.Put(&api.KVPair{Key: "remtest/database/hosts/0/size", Value: []byte("60")}, nil)
+	c.client.Put(&api.KVPair{Key: "remtest/database/hosts/1/name", Value: []byte("test2")}, nil)
+	c.client.Put(&api.KVPair{Key: "remtest/database/hosts/1/ip", Value: []byte("192.168.0.2")}, nil)
+	c.client.Put(&api.KVPair{Key: "remtest/database/hosts/1/size", Value: []byte("80")}, nil)
 
 	testutils.GetValues(t, c)
 }

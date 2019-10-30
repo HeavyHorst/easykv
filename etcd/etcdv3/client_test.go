@@ -35,8 +35,12 @@ func (s *FilterSuite) TestGetValues(t *C) {
 
 	c.client.Put(context.Background(), "/premtest/database/url", "www.google.de")
 	c.client.Put(context.Background(), "/premtest/database/user", "Boris")
-	c.client.Put(context.Background(), "/remtest/database/hosts/192.168.0.1", "test1")
-	c.client.Put(context.Background(), "/remtest/database/hosts/192.168.0.2", "test2")
+	c.client.Put(context.Background(), "/remtest/database/hosts/0/name", "test1")
+	c.client.Put(context.Background(), "/remtest/database/hosts/0/ip", "192.168.0.1")
+	c.client.Put(context.Background(), "/remtest/database/hosts/0/size", "60")
+	c.client.Put(context.Background(), "/remtest/database/hosts/1/name", "test2")
+	c.client.Put(context.Background(), "/remtest/database/hosts/1/ip", "192.168.0.2")
+	c.client.Put(context.Background(), "/remtest/database/hosts/1/size", "80")
 
 	testutils.GetValues(t, c)
 }
