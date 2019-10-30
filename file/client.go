@@ -91,25 +91,20 @@ func (c *Client) GetValues(keys []string) (map[string]string, error) {
 func (c *Client) Close() {}
 
 // nodeWalk recursively descends nodes, updating vars.
-func nodeWalk(node map[interface{}]interface{}, key string, vars map[string]string) error {
-	for k, v := range node {
-		key := key + "/" + k.(string)
-
-		switch v := v.(type) {
-		case map[interface{}]interface{}:
+func nodeWalk(node interface{}, key string, vars map[string]string) error {
+	switch node := node.(type) {
+	case map[interface{}]interface{}:
+		for k, v := range node {
+			key := fmt.Sprintf("%s/%v", key, k)
 			nodeWalk(v, key, vars)
-		case []interface{}:
-			for _, j := range v {
-				switch j := j.(type) {
-				case map[interface{}]interface{}:
-					nodeWalk(j, key, vars)
-				default:
-					vars[fmt.Sprintf("%s/%v", key, j)] = ""
-				}
-			}
-		default:
-			vars[key] = fmt.Sprintf("%v", v)
 		}
+	case []interface{}:
+		for i, j := range node {
+			key := fmt.Sprintf("%s/%d", key, i)
+			nodeWalk(j, key, vars)
+		}
+	default:
+		vars[key] = fmt.Sprintf("%v", node)
 	}
 	return nil
 }

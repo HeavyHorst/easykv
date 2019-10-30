@@ -16,10 +16,14 @@ import (
 )
 
 var expected = map[string]string{
-	"/premtest/database/url":              "www.google.de",
-	"/premtest/database/user":             "Boris",
-	"/remtest/database/hosts/192.168.0.1": "test1",
-	"/remtest/database/hosts/192.168.0.2": "test2",
+	"/premtest/database/url":         "www.google.de",
+	"/premtest/database/user":        "Boris",
+	"/remtest/database/hosts/0/name": "test1",
+	"/remtest/database/hosts/0/ip":   "192.168.0.1",
+	"/remtest/database/hosts/0/size": "60",
+	"/remtest/database/hosts/1/name": "test2",
+	"/remtest/database/hosts/1/ip":   "192.168.0.2",
+	"/remtest/database/hosts/1/size": "80",
 }
 
 var expectedPrefix = map[string]string{
