@@ -10,7 +10,10 @@ package file
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"sync"
 	"testing"
@@ -172,4 +175,32 @@ func (s *FilterSuite) TestWatchPrefixCancel(t *C) {
 
 	cancel()
 	wg.Wait()
+}
+
+func (s *FilterSuite) TestHTTPWithHeaders(t *C) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "---")
+		for name, value := range r.Header {
+			fmt.Fprintf(w, "%s: %q\n", name, value[0])
+		}
+	}))
+	defer ts.Close()
+
+	c, _ := New(ts.URL, WithHeaders(map[string]string{
+		"X-Test-Token": "Hi",
+		"Content-Type": "application/json",
+	}))
+	vals, err := c.GetValues([]string{"/"})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	testHeader := func(header, expected string) {
+		if vals[header] != expected {
+			t.Errorf("Expected %q to equal %q", header, expected)
+		}
+	}
+	testHeader("/X-Test-Token", "Hi")
+	testHeader("/Content-Type", "application/json")
+	testHeader("/X-Nonexistent", "")
 }
