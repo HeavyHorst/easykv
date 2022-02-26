@@ -80,7 +80,7 @@ func (c *Client) Close() {
 
 func clean(key string) string {
 	newKey := "/" + key
-	return cleanReplacer.Replace(strings.ToLower(newKey))
+	return cleanReplacer.Replace(newKey)
 }
 
 // GetValues is used to lookup all keys with a prefix.
