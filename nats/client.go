@@ -23,6 +23,8 @@ var cleanReplacer = strings.NewReplacer(".", "/")
 type Client struct {
 	nc *nats.Conn
 	kv nats.KeyValue
+
+	revisionMap map[string]uint64
 }
 
 // New returns a new client
@@ -67,8 +69,9 @@ func New(nodes []string, bucket string, opts ...Option) (*Client, error) {
 	}
 
 	return &Client{
-		nc: nc,
-		kv: kv,
+		nc:          nc,
+		kv:          kv,
+		revisionMap: make(map[string]uint64),
 	}, nil
 }
 
@@ -130,19 +133,30 @@ func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easykv.
 	}
 
 	defer watcher.Stop()
+
 	for v := range watcher.Updates() {
 		if v == nil {
 			break
 		}
-		for _, k := range options.Keys {
-			if strings.HasPrefix(clean(string(v.Key())), k) {
-				return v.Revision(), nil
-			}
-		}
+		c.revisionMap[v.Key()] = v.Revision()
 	}
 
-	if ctx.Err() == context.Canceled {
-		return options.WaitIndex, easykv.ErrWatchCanceled
+	for {
+		select {
+		case v := <-watcher.Updates():
+			if v == nil {
+				break
+			}
+
+			for _, k := range options.Keys {
+				if strings.HasPrefix(clean(string(v.Key())), k) {
+					if v.Revision() != c.revisionMap[v.Key()] {
+						return v.Revision(), nil
+					}
+				}
+			}
+		case <-ctx.Done():
+			return 0, easykv.ErrWatchCanceled
+		}
 	}
-	return 0, err
 }
