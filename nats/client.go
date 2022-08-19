@@ -86,6 +86,17 @@ func clean(key string) string {
 	return cleanReplacer.Replace(newKey)
 }
 
+func getWatchKey(prefix string) string {
+	prefix = strings.ReplaceAll(prefix, "/", ".")
+	prefix = strings.TrimPrefix(prefix, ".")
+
+	if prefix == "" {
+		return ">"
+	}
+
+	return prefix + ".>"
+}
+
 // GetValues is used to lookup all keys with a prefix.
 // Several prefixes can be specified in the keys array.
 func (c *Client) GetValues(keys []string) (map[string]string, error) {
@@ -127,7 +138,7 @@ func (c *Client) WatchPrefix(ctx context.Context, prefix string, opts ...easykv.
 		o(&options)
 	}
 
-	watcher, err = c.kv.WatchAll(nats.Context(ctx))
+	watcher, err = c.kv.Watch(getWatchKey(prefix), nats.Context(ctx), nats.MetaOnly())
 	if err != nil {
 		return 0, fmt.Errorf("couldn't create nats watcher: %w", err)
 	}

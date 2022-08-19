@@ -15,6 +15,8 @@ import (
 	"time"
 
 	"github.com/HeavyHorst/easykv/testutils"
+	"github.com/nats-io/nats-server/v2/server"
+	"github.com/nats-io/nats.go"
 
 	. "gopkg.in/check.v1"
 )
@@ -26,8 +28,51 @@ type FilterSuite struct{}
 
 var _ = Suite(&FilterSuite{})
 
+func init() {
+	opts := &server.Options{
+		JetStream: true,
+		Port:      4223,
+	}
+
+	// Initialize new server with options
+	ns, err := server.NewServer(opts)
+
+	if err != nil {
+		panic(err)
+	}
+
+	// Start the server via goroutine
+	go ns.Start()
+	// Wait for server to be ready for connections
+	if !ns.ReadyForConnections(4 * time.Second) {
+		panic("not ready for connection")
+	}
+
+	nc, err := nats.Connect("nats://127.0.0.1:4223")
+	if err != nil {
+		panic(err)
+	}
+
+	js, err := nc.JetStream()
+	if err != nil {
+		panic(err)
+	}
+
+	buckets := []string{"config"}
+	for _, bucket := range buckets {
+		_, err = js.CreateKeyValue(&nats.KeyValueConfig{
+			Bucket:  bucket,
+			History: 1,
+			Storage: nats.MemoryStorage,
+		})
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
 func (s *FilterSuite) TestGetValues(t *C) {
-	c, err := New([]string{}, "config")
+	c, err := New([]string{"nats://127.0.0.1:4223"}, "config")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -44,8 +89,8 @@ func (s *FilterSuite) TestGetValues(t *C) {
 	testutils.GetValues(t, c)
 }
 
-func (s *FilterSuite) TestWatchPrefix(t *C) {
-	c, err := New([]string{}, "config")
+func (s *FilterSuite) TestWatchEmptyPrefix(t *C) {
+	c, err := New([]string{"nats://127.0.0.1:4223"}, "config")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -64,8 +109,28 @@ func (s *FilterSuite) TestWatchPrefix(t *C) {
 	wg.Wait()
 }
 
+func (s *FilterSuite) TestWatchPrefix(t *C) {
+	c, err := New([]string{"nats://127.0.0.1:4223"}, "config")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.Close()
+
+	wg := sync.WaitGroup{}
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		testutils.WatchPrefix(context.Background(), t, c, "/remtest/database", []string{"/remtest/database/hosts"})
+	}()
+
+	time.Sleep(100 * time.Millisecond)
+	c.kv.Put("remtest.database.hosts.192.168.0.3", []byte("test3"))
+	c.kv.Delete("remtest.database.hosts.192.168.0.3")
+	wg.Wait()
+}
+
 func (s *FilterSuite) TestWatchPrefixCancel(t *C) {
-	c, err := New([]string{}, "config")
+	c, err := New([]string{"nats://127.0.0.1:4223"}, "config")
 	if err != nil {
 		t.Fatal(err)
 	}
