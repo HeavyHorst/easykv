@@ -32,7 +32,7 @@ import (
 
 // Client is a wrapper around the etcd client
 type Client struct {
-	client client.KeysAPI
+	client       client.KeysAPI
 	serializable bool
 }
 

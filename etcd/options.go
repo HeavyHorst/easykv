@@ -10,11 +10,11 @@ package etcd
 
 // Options contains all values that are needed to connect to etcd.
 type Options struct {
-	Nodes   []string
-	Version int
+	Nodes        []string
+	Version      int
 	Serializable bool
-	TLS     TLSOptions
-	Auth    BasicAuthOptions
+	TLS          TLSOptions
+	Auth         BasicAuthOptions
 }
 
 // TLSOptions contains all certificates and keys.

@@ -21,7 +21,7 @@ import (
 
 // Client is a wrapper around the etcd client
 type Client struct {
-	client *clientv3.Client
+	client       *clientv3.Client
 	serializable bool
 }
 
