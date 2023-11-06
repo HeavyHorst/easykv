@@ -12,6 +12,7 @@ package etcd
 type Options struct {
 	Nodes   []string
 	Version int
+	Serializable bool
 	TLS     TLSOptions
 	Auth    BasicAuthOptions
 }
