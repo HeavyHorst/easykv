@@ -53,3 +53,9 @@ func WithVersion(v int) Option {
 		o.Version = v
 	}
 }
+
+func WithSerializableReads(b bool) Option {
+	return func(o *Options) {
+		o.Serializable = b
+	}
+}
