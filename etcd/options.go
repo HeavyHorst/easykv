@@ -12,6 +12,7 @@ package etcd
 type Options struct {
 	Nodes   []string
 	Version int
+	RequestTimeout int
 	TLS     TLSOptions
 	Auth    BasicAuthOptions
 }
@@ -50,5 +51,11 @@ func WithBasicAuth(b BasicAuthOptions) Option {
 func WithVersion(v int) Option {
 	return func(o *Options) {
 		o.Version = v
+	}
+}
+
+func WithRequestTimeout(t int) Option {
+	return func(o *Options) {
+		o.RequestTimeout = t
 	}
 }
