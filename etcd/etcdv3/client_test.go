@@ -27,7 +27,7 @@ type FilterSuite struct{}
 var _ = Suite(&FilterSuite{})
 
 func (s *FilterSuite) TestGetValues(t *C) {
-	c, err := NewEtcdClient([]string{"http://localhost:2379"}, "", "", "", false, "", "")
+	c, err := NewEtcdClient([]string{"http://localhost:2379"}, "", "", "", false, "", "", false)
 	if err != nil {
 		t.Error(err)
 	}
@@ -46,7 +46,7 @@ func (s *FilterSuite) TestGetValues(t *C) {
 }
 
 func (s *FilterSuite) TestWatchPrefix(t *C) {
-	c, err := NewEtcdClient([]string{"http://localhost:2379"}, "", "", "", false, "", "")
+	c, err := NewEtcdClient([]string{"http://localhost:2379"}, "", "", "", false, "", "", false)
 	if err != nil {
 		t.Error(err)
 	}
@@ -66,7 +66,7 @@ func (s *FilterSuite) TestWatchPrefix(t *C) {
 }
 
 func (s *FilterSuite) TestWatchPrefixCancel(t *C) {
-	c, err := NewEtcdClient([]string{"http://localhost:2379"}, "", "", "", false, "", "")
+	c, err := NewEtcdClient([]string{"http://localhost:2379"}, "", "", "", false, "", "", false)
 	if err != nil {
 		t.Error(err)
 	}
