@@ -32,11 +32,12 @@ import (
 
 // Client is a wrapper around the etcd client
 type Client struct {
-	client client.KeysAPI
+	client       client.KeysAPI
+	serializable bool
 }
 
 // NewEtcdClient returns an *etcd.Client with a connection to named machines.
-func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, username string, password string, requestTimeout time.Duration) (*Client, error) {
+func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, username string, password string, serializable bool, requestTimeout time.Duration) (*Client, error) {
 	var c client.Client
 	var kapi client.KeysAPI
 	var err error
@@ -66,7 +67,7 @@ func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, 
 	if caCert != "" {
 		certBytes, err := ioutil.ReadFile(caCert)
 		if err != nil {
-			return &Client{kapi}, err
+			return &Client{kapi, serializable}, err
 		}
 
 		caCertPool := x509.NewCertPool()
@@ -80,7 +81,7 @@ func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, 
 	if cert != "" && key != "" {
 		tlsCert, err := tls.LoadX509KeyPair(cert, key)
 		if err != nil {
-			return &Client{kapi}, err
+			return &Client{kapi, serializable}, err
 		}
 		tlsConfig.Certificates = []tls.Certificate{tlsCert}
 	}
@@ -90,11 +91,11 @@ func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, 
 
 	c, err = client.New(cfg)
 	if err != nil {
-		return &Client{kapi}, err
+		return &Client{kapi, serializable}, err
 	}
 
 	kapi = client.NewKeysAPI(c)
-	return &Client{kapi}, nil
+	return &Client{kapi, serializable}, nil
 }
 
 // Close is only meant to fulfill the easykv.ReadWatcher interface.
@@ -109,7 +110,7 @@ func (c *Client) GetValues(keys []string) (map[string]string, error) {
 		resp, err := c.client.Get(context.Background(), key, &client.GetOptions{
 			Recursive: true,
 			Sort:      true,
-			Quorum:    true,
+			Quorum:    !c.serializable,
 		})
 		if err != nil {
 			return vars, err

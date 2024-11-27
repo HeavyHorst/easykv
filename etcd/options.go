@@ -12,6 +12,7 @@ package etcd
 type Options struct {
 	Nodes          []string
 	Version        int
+	Serializable   bool
 	RequestTimeout int
 	TLS            TLSOptions
 	Auth           BasicAuthOptions
@@ -51,6 +52,12 @@ func WithBasicAuth(b BasicAuthOptions) Option {
 func WithVersion(v int) Option {
 	return func(o *Options) {
 		o.Version = v
+	}
+}
+
+func WithSerializableReads(b bool) Option {
+	return func(o *Options) {
+		o.Serializable = b
 	}
 }
 

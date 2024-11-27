@@ -41,11 +41,11 @@ func New(machines []string, opts ...Option) (easykv.ReadWatcher, error) {
 	}
 
 	if options.Version == 3 {
-		return etcdv3.NewEtcdClient(options.Nodes, options.TLS.ClientCert, options.TLS.ClientKey, options.TLS.ClientCaKeys, ba, options.Auth.Username, options.Auth.Password, requestTimeout)
+		return etcdv3.NewEtcdClient(options.Nodes, options.TLS.ClientCert, options.TLS.ClientKey, options.TLS.ClientCaKeys, ba, options.Auth.Username, options.Auth.Password, options.Serializable, requestTimeout)
 	}
 
 	if options.Version == 2 {
-		return etcdv2.NewEtcdClient(options.Nodes, options.TLS.ClientCert, options.TLS.ClientKey, options.TLS.ClientCaKeys, ba, options.Auth.Username, options.Auth.Password, requestTimeout)
+		return etcdv2.NewEtcdClient(options.Nodes, options.TLS.ClientCert, options.TLS.ClientKey, options.TLS.ClientCaKeys, ba, options.Auth.Username, options.Auth.Password, options.Serializable, requestTimeout)
 	}
 
 	return nil, ErrUnknownAPILevel
