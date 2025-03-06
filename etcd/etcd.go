@@ -10,6 +10,7 @@ package etcd
 
 import (
 	"errors"
+	"time"
 
 	"github.com/HeavyHorst/easykv"
 	"github.com/HeavyHorst/easykv/etcd/etcdv2"
@@ -32,12 +33,19 @@ func New(machines []string, opts ...Option) (easykv.ReadWatcher, error) {
 		ba = true
 	}
 
+	var requestTimeout time.Duration
+	if options.RequestTimeout == 0 {
+		requestTimeout = time.Duration(3) * time.Second
+	} else {
+		requestTimeout = time.Duration(options.RequestTimeout) * time.Second
+	}
+
 	if options.Version == 3 {
-		return etcdv3.NewEtcdClient(options.Nodes, options.TLS.ClientCert, options.TLS.ClientKey, options.TLS.ClientCaKeys, ba, options.Auth.Username, options.Auth.Password, options.Serializable)
+		return etcdv3.NewEtcdClient(options.Nodes, options.TLS.ClientCert, options.TLS.ClientKey, options.TLS.ClientCaKeys, ba, options.Auth.Username, options.Auth.Password, options.Serializable, requestTimeout)
 	}
 
 	if options.Version == 2 {
-		return etcdv2.NewEtcdClient(options.Nodes, options.TLS.ClientCert, options.TLS.ClientKey, options.TLS.ClientCaKeys, ba, options.Auth.Username, options.Auth.Password, options.Serializable)
+		return etcdv2.NewEtcdClient(options.Nodes, options.TLS.ClientCert, options.TLS.ClientKey, options.TLS.ClientCaKeys, ba, options.Auth.Username, options.Auth.Password, options.Serializable, requestTimeout)
 	}
 
 	return nil, ErrUnknownAPILevel

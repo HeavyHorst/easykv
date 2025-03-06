@@ -21,12 +21,13 @@ import (
 
 // Client is a wrapper around the etcd client
 type Client struct {
-	client       *clientv3.Client
-	serializable bool
+	client         *clientv3.Client
+	serializable   bool
+	requestTimeout time.Duration
 }
 
 // NewEtcdClient returns an *etcdv3.Client with a connection to named machines.
-func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, username string, password string, serializable bool) (*Client, error) {
+func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, username string, password string, serializable bool, requestTimeout time.Duration) (*Client, error) {
 	var cli *clientv3.Client
 	cfg := clientv3.Config{
 		Endpoints:   machines,
@@ -53,16 +54,16 @@ func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, 
 	if tls {
 		clientConf, err := tlsInfo.ClientConfig()
 		if err != nil {
-			return &Client{cli, serializable}, err
+			return &Client{cli, serializable, requestTimeout}, err
 		}
 		cfg.TLS = clientConf
 	}
 
 	cli, err := clientv3.New(cfg)
 	if err != nil {
-		return &Client{cli, serializable}, err
+		return &Client{cli, serializable, requestTimeout}, err
 	}
-	return &Client{cli, serializable}, nil
+	return &Client{cli, serializable, requestTimeout}, nil
 }
 
 // Close closes the etcdv3 client connection.
@@ -77,7 +78,7 @@ func (c *Client) Close() {
 func (c *Client) GetValues(keys []string) (map[string]string, error) {
 	vars := make(map[string]string)
 	for _, key := range keys {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(3)*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), c.requestTimeout)
 		opts := []clientv3.OpOption{clientv3.WithPrefix(), clientv3.WithSort(clientv3.SortByKey, clientv3.SortDescend)}
 		if c.serializable {
 			opts = append(opts, clientv3.WithSerializable())

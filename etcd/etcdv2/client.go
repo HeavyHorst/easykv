@@ -37,7 +37,7 @@ type Client struct {
 }
 
 // NewEtcdClient returns an *etcd.Client with a connection to named machines.
-func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, username string, password string, serializable bool) (*Client, error) {
+func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, username string, password string, serializable bool, requestTimeout time.Duration) (*Client, error) {
 	var c client.Client
 	var kapi client.KeysAPI
 	var err error
@@ -56,7 +56,7 @@ func NewEtcdClient(machines []string, cert, key, caCert string, basicAuth bool, 
 
 	cfg := client.Config{
 		Endpoints:               machines,
-		HeaderTimeoutPerRequest: time.Duration(3) * time.Second,
+		HeaderTimeoutPerRequest: requestTimeout,
 	}
 
 	if basicAuth {

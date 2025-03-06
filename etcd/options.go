@@ -10,11 +10,12 @@ package etcd
 
 // Options contains all values that are needed to connect to etcd.
 type Options struct {
-	Nodes        []string
-	Version      int
-	Serializable bool
-	TLS          TLSOptions
-	Auth         BasicAuthOptions
+	Nodes          []string
+	Version        int
+	Serializable   bool
+	RequestTimeout int
+	TLS            TLSOptions
+	Auth           BasicAuthOptions
 }
 
 // TLSOptions contains all certificates and keys.
@@ -57,5 +58,11 @@ func WithVersion(v int) Option {
 func WithSerializableReads(b bool) Option {
 	return func(o *Options) {
 		o.Serializable = b
+	}
+}
+
+func WithRequestTimeout(t int) Option {
+	return func(o *Options) {
+		o.RequestTimeout = t
 	}
 }
